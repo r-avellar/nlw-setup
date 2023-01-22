@@ -1,16 +1,53 @@
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Alert } from "react-native";
 import { HabitDay, DAY_SIZE } from "../components/HabitDay";
 import { Header } from "../components/Header";
 import { generatedatesFromYearBeginning } from '../utils/generate-dates-from-year-beginning'
 import { useNavigation } from '@react-navigation/native'
+import { api } from '../lib/axios'
+import { useEffect, useState } from "react";
+import { Loading } from "../components/Loading";
+import dayjs from "dayjs";
 
 const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"]
 const datesFromYearStart = generatedatesFromYearBeginning()
 const minimumSummaryDatesSizes = 18 * 5
 const amountOftheDayToFill = minimumSummaryDatesSizes - datesFromYearStart.length
 
+type Summary = Array<{
+  id: string
+  date: string
+  amount: number
+  completed: number
+}>
+
 export function Home(){
   const { navigate } = useNavigation()
+  const [loading, setLoading] = useState(true)
+  const [summary, setSummary] = useState<Summary>([])
+
+  useEffect(()=>{
+   fetchData()
+  },[])
+
+  async function fetchData(){
+    try {
+      setLoading(true)
+      const response = await api.get("/summary")
+      setSummary(response.data)
+      console.log(summary)
+      
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoading(false)
+    }
+  }
+  if(loading){
+    return(
+      <Loading />
+    )
+  }
+
   return(
     <View className="flex-1 bg-background px-8 pt-16">
       <Header />
@@ -35,13 +72,23 @@ export function Home(){
       >
         <View className="flex-row flex-wrap">
         {
-          datesFromYearStart.map(date =>(
-            <HabitDay 
-              key={date.toISOString()}
-              onPress={()=> navigate('habit',{date: date.toISOString()})}
-          />
-          ))
+          datesFromYearStart.map(date =>{
+            const dayWithHabits = summary.find(day => {
+              return dayjs(date).isSame(day.date,'day')
+              
+            })
+            return(
+              <HabitDay 
+                key={date.toISOString()}
+                onPress={()=> navigate('habit',{date: date.toISOString()})}
+                date={date}
+                amountCompleted={dayWithHabits?.completed}
+                amountOfHabits={dayWithHabits?.amount}
+            />
+          ) 
+        })
         }
+        
 
 {
         amountOftheDayToFill > 0 && Array
