@@ -43,7 +43,7 @@ export function NewHabitForm(){
         Qual o seu comprometimento?
       </label>
 
-      <input className="p-4 rounded-lg m-3 bg-zinc-800 text-white placeholder:text-zinc-400"
+      <input className="p-4 rounded-lg m-3 bg-zinc-800 text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-700 focus:ring-offset-2 focus:ring-offset-zinc-900"
         type="text"
         id="title"
         placeholder="ex: Exericios, dormir bem, etc..."  
@@ -56,18 +56,18 @@ export function NewHabitForm(){
         Qual a recorrência?
       </label>
 
-      <div className="flex flex-col gap-2 mt-3">
+      <div className="flex flex-col gap-2 mt-3 focus:o">
         {
           AvailableWeekDays.map((weekday,i) =>{
             return(
               <Checkbox.Root 
                 key={weekday} 
-                className='flex items-center gap-3 group'
+                className='flex items-center gap-3 group focus:outline-none'
                 onCheckedChange={() => handleToogleWeekDay(i)}  
                 checked={weekDays.includes(i)}
               >
           <div 
-            className='h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500'
+            className='h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500 transition-colors group-focus:ring-2 group-focus:ring-violet-700 group-focus:ring-offset-2 group-focus:ring-offset-background'
             >
             <Checkbox.Indicator>
               <Check size={20} className="text-white" />
@@ -82,7 +82,7 @@ export function NewHabitForm(){
         }
       </div>
 
-      <button type="submit" className="mt-6 rounded-lg p-4 flex items-center gap-3 font-semibold bg-green-600 justify-center hover:bg-green-500"> 
+      <button type="submit" className="mt-6 rounded-lg p-4 flex items-center gap-3 font-semibold bg-green-600 justify-center hover:bg-green-500 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-900"> 
         <Check size={20} weight="bold" />
         Confirmar
       </button>
